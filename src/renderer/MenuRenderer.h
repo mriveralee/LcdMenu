@@ -38,6 +38,11 @@ class MenuRenderer {
     uint8_t cursorRow;
 
     bool inEditMode;
+    
+    /**
+     * @brief Flag indicating whether the display has timed-out
+     */
+    bool timedOut = false;
 
     unsigned long startTime = 0;
 
@@ -116,13 +121,19 @@ class MenuRenderer {
         }
         LOG(F("MenuRenderer::timeout"));
         display->hide();
+        timedOut = true;
     }
-
     /**
      * @brief Checks if the menu is in edit mode.
      * @return True if in edit mode, false otherwise.
      */
     bool isInEditMode() const;
+
+
+    /**
+     * @brief returns whether the display is currently timeout
+     */
+    bool isTimedOut() const;
 
     /**
      * @brief Gets the current column position of the cursor.

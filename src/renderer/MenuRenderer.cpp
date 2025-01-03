@@ -23,9 +23,12 @@ void MenuRenderer::setEditMode(bool inEditMode) {
 void MenuRenderer::restartTimer() {
     this->startTime = millis();
     display->show();
+    timedOut = false;
 }
 
 bool MenuRenderer::isInEditMode() const { return inEditMode; }
+
+bool MenuRenderer::isTimedOut() const {return timedOut; }
 
 uint8_t MenuRenderer::getCursorCol() const { return cursorCol; }
 
