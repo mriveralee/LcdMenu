@@ -57,18 +57,27 @@ class SimpleRotaryAdapter : public InputInterface {
     }
 
     void observe() override {
-        // Handle rotary encoder rotation
+
+        // Get input states
         uint8_t rotation = encoder->rotate();
+        uint8_t pressType = encoder->pushType(LONG_PRESS_DURATION);
+        unsigned long currentTime = millis();
+        
+        // Check if renderer has timed-out and there is any interaciton
+        if (menu->getRenderer()->isTimedOut() && (pressType > 0 || rotation > 0)) {
+            // Reset display timeout without triggering any menu actions
+            menu->getRenderer()->restartTimer();
+            return;
+        }
+
+        // Handle rotary encoder rotation
         if (rotation == 1) {
             menu->process(DOWN);  // Call DOWN action
         } else if (rotation == 2) {
             menu->process(UP);  // Call UP action
         }
-
+        
         // Handle button press (short, long, and double press)
-        uint8_t pressType = encoder->pushType(LONG_PRESS_DURATION);
-        unsigned long currentTime = millis();
-
         if (pressType == 1) {
             if (pendingEnter) {
                 if (DOUBLE_PRESS_THRESHOLD > 0 && currentTime - lastPressTime < DOUBLE_PRESS_THRESHOLD) {
