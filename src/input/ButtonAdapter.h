@@ -33,6 +33,12 @@ class ButtonAdapter : public InputInterface {
 
     void observe() override {
         if (button->pressed()) {
+            // Check if renderer has timed-out 
+            if (menu->getRenderer()->isTimedOut()) {
+              // Reset display timeout without triggering any menu actions
+              menu->getRenderer()->restartTimer();
+              return;
+            }
             menu->process(command);
         }
     }
